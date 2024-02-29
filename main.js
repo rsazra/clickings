@@ -197,7 +197,7 @@ function showResult() {
 // Command actions
 document.addEventListener('keydown', e => {
   if (!document.querySelector('#theme-center').classList.contains('hidden')) {
-    if (e.key === 'Escape'){
+    if (e.key === 'Escape') {
       hideThemeCenter();
       inputField.focus();
     }
@@ -237,11 +237,11 @@ function setLanguage(_lang) {
         setCookie('language', lang, 90);
 
         if (lang === "arabic") {
-            textDisplay.style.direction = "rtl"
-            inputField.style.direction = "rtl"
+          textDisplay.style.direction = "rtl"
+          inputField.style.direction = "rtl"
         } else {
-            textDisplay.style.direction = "ltr"
-            inputField.style.direction = "ltr"
+          textDisplay.style.direction = "ltr"
+          inputField.style.direction = "ltr"
         }
 
         setText();
@@ -321,8 +321,8 @@ function getCookie(cname) {
 }
 
 showAllThemes();
-function showAllThemes(){
-    fetch(`themes/theme-list.json`)
+function showAllThemes() {
+  fetch(`themes/theme-list.json`)
     .then(response => {
       if (response.status === 200) {
         response
@@ -331,7 +331,7 @@ function showAllThemes(){
             let themes = JSON.parse(body);
             let keys = Object.keys(themes);
             let i;
-            for(i = 0;i < keys.length; i ++){
+            for (i = 0; i < keys.length; i++) {
 
               let theme = document.createElement('div');
               theme.setAttribute('class', 'theme-button');
@@ -348,10 +348,10 @@ function showAllThemes(){
                 }
               })
 
-              if(themes[keys[i]]['customHTML'] != undefined){
+              if (themes[keys[i]]['customHTML'] != undefined) {
                 theme.style.background = themes[keys[i]]['background'];
                 theme.innerHTML = themes[keys[i]]['customHTML']
-              }else{
+              } else {
                 theme.textContent = keys[i];
                 theme.style.background = themes[keys[i]]['background'];
                 theme.style.color = themes[keys[i]]['color'];

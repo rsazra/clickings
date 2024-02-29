@@ -37,9 +37,9 @@ body {
 }
 
 .bottom-bar {
-  /* display: flex; */
-  /* justify-content: flex-end; */
-  /* margin-left: auto; */
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
 }
 
 
