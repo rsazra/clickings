@@ -3,8 +3,8 @@ const textDisplay = document.querySelector('#text-display');
 const inputField = document.querySelector('#input-field');
 
 // Initialize typing mode variables
-let typingMode = 'wordcount';
-let wordCount;
+let clickingMode = 'clickcount';
+let clickCount;
 let timeCount;
 
 // Initialize dynamic variables
@@ -15,25 +15,17 @@ let correctKeys = 0;
 let startDate = 0;
 let timer;
 let timerActive = false;
-let punctuation = false;
 
 // Get cookies
 getCookie('theme') === '' ? setTheme('light') : setTheme(getCookie('theme'));
-getCookie('language') === '' ? setLanguage('english') : setLanguage(getCookie('language'));
-getCookie('wordCount') === '' ? setWordCount(50) : setWordCount(getCookie('wordCount'));
+getCookie('clickCount') === '' ? setClickCount(50) : setClickCount(getCookie('clickCount'));
 getCookie('timeCount') === '' ? setTimeCount(60) : setTimeCount(getCookie('timeCount'));
-getCookie('typingMode') === '' ? setTypingMode('wordcount') : setTypingMode(getCookie('typingMode'));
-getCookie('punctuation') === '' ? setPunctuation('false') : setPunctuation(getCookie('punctuation'));
+getCookie('clickingMode') === '' ? setClickingMode('clickcount') : setClickingMode(getCookie('clickingMode'));
 
-// Find a list of words and display it to textDisplay
-function setText(e) {
-  e = e || window.event;
-  var keepWordList = e && e.shiftKey;
+setLanguage('english')
 
-  // Reset
-  if (!keepWordList) {
-    wordList = [];
-  }
+// RESET
+function setText() {
   currentWord = 0;
   correctKeys = 0;
   inputField.value = '';
@@ -42,17 +34,15 @@ function setText(e) {
   textDisplay.style.display = 'block';
   inputField.className = '';
 
-  switch (typingMode) {
-    case 'wordcount':
+  switch (clickingMode) {
+    case 'clickcount':
       textDisplay.style.height = 'auto';
       textDisplay.innerHTML = '';
-      if (!keepWordList) {
-        wordList = [];
-        while (wordList.length < wordCount) {
-          const randomWord = randomWords[Math.floor(Math.random() * randomWords.length)];
-          if (wordList[wordList.length - 1] !== randomWord || wordList[wordList.length - 1] === undefined || getCookie('language') === 'dots') {
-            wordList.push(randomWord);
-          }
+      wordList = [];
+      while (wordList.length < clickCount) {
+        const randomWord = randomWords[Math.floor(Math.random() * randomWords.length)];
+        if (wordList[wordList.length - 1] !== randomWord || wordList[wordList.length - 1] === undefined) {
+          wordList.push(randomWord);
         }
       }
       break;
@@ -61,52 +51,18 @@ function setText(e) {
       textDisplay.style.height = '3.2rem';
       document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
       textDisplay.innerHTML = '';
-      if (!keepWordList) {
-        wordList = [];
-        for (i = 0; i < 500; i++) {
-          let n = Math.floor(Math.random() * randomWords.length);
-          wordList.push(randomWords[n]);
-        }
+      wordList = [];
+      for (i = 0; i < 500; i++) {
+        let n = Math.floor(Math.random() * randomWords.length);
+        wordList.push(randomWords[n]);
       }
   }
 
-  if (punctuation) addPunctuations();
   showText();
   inputField.focus();
 }
 
-function addPunctuations() {
-  if (wordList[0] !== undefined) {
-    // Capitalize first word
-    wordList[0] = wordList[0][0].toUpperCase() + wordList[0].slice(1);
-
-    // Add comma, fullstop, question mark, exclamation mark, semicolon. Capitalize the next word
-    for (i = 0; i < wordList.length; i++) {
-      const ran = Math.random();
-      if (i < wordList.length - 1) {
-        if (ran < 0.03) {
-          wordList[i] += ',';
-        } else if (ran < 0.05) {
-          wordList[i] += '.';
-          wordList[i + 1] = wordList[i + 1][0].toUpperCase() + wordList[i + 1].slice(1);
-        } else if (ran < 0.06) {
-          wordList[i] += '?';
-          wordList[i + 1] = wordList[i + 1][0].toUpperCase() + wordList[i + 1].slice(1);
-        } else if (ran < 0.07) {
-          wordList[i] += '!';
-          wordList[i + 1] = wordList[i + 1][0].toUpperCase() + wordList[i + 1].slice(1);
-        } else if (ran < 0.08) {
-          wordList[i] += ';';
-        }
-      }
-    }
-    wordList[wordList.length - 1] += '.';
-
-    // Add quotation marks
-  }
-}
-
-// Display text to textDisplay
+// DISPLAY RESET
 function showText() {
   wordList.forEach(word => {
     let span = document.createElement('span');
@@ -116,11 +72,12 @@ function showText() {
   textDisplay.firstChild.classList.add('highlight');
 }
 
+// MAIN GAMEPLAY LOOP!
 // Key is pressed in input field
 inputField.addEventListener('keydown', e => {
   // Add wrong class to input field
-  switch (typingMode) {
-    case 'wordcount':
+  switch (clickingMode) {
+    case 'clickcount':
       if (currentWord < wordList.length) inputFieldClass();
     case 'time':
       if (timerActive) inputFieldClass();
@@ -141,8 +98,8 @@ inputField.addEventListener('keydown', e => {
 
   // If it is the first character entered
   if (currentWord === 0 && inputField.value === '') {
-    switch (typingMode) {
-      case 'wordcount':
+    switch (clickingMode) {
+      case 'clickcount':
         startDate = Date.now();
         break;
 
@@ -175,7 +132,7 @@ inputField.addEventListener('keydown', e => {
 
     if (inputField.value !== '') {
       // Scroll down text when reach new line
-      if (typingMode === 'time') {
+      if (clickingMode === 'time') {
         const currentWordPosition = textDisplay.childNodes[currentWord].getBoundingClientRect();
         const nextWordPosition = textDisplay.childNodes[currentWord + 1].getBoundingClientRect();
         if (currentWordPosition.top < nextWordPosition.top) {
@@ -212,12 +169,12 @@ inputField.addEventListener('keydown', e => {
   }
 });
 
-// Calculate and display result
+// Calculate and display result -- will need to be heavily edited
 function showResult() {
-  let words, minute, acc;
-  switch (typingMode) {
-    case 'wordcount':
-      words = correctKeys / 5;
+  let clicks, minute, acc;
+  switch (clickingMode) {
+    case 'clickcount':
+      clicks = correctKeys / 5;
       minute = (Date.now() - startDate) / 1000 / 60;
       let totalKeys = -1;
       wordList.forEach(e => (totalKeys += e.length + 1));
@@ -225,7 +182,7 @@ function showResult() {
       break;
 
     case 'time':
-      words = correctKeys / 5;
+      clicks = correctKeys / 5;
       minute = timeCount / 60;
       let sumKeys = -1;
       for (i = 0; i < currentWord; i++) {
@@ -233,39 +190,19 @@ function showResult() {
       }
       acc = acc = Math.min(Math.floor((correctKeys / sumKeys) * 100), 100);
   }
-  let wpm = Math.floor(words / minute);
+  let wpm = Math.floor(clicks / minute);
   document.querySelector('#right-wing').innerHTML = `WPM: ${wpm} / ACC: ${acc}`;
 }
 
 // Command actions
 document.addEventListener('keydown', e => {
-  // Modifiers Windows: [Alt], Mac: [Cmd + Ctrl]
-  if (e.altKey || (e.metaKey && e.ctrlKey)) {
-    // [mod + t] => Change the theme
-    if (e.key === 't') {
-      setTheme(inputField.value);
-    }
-    // [mod + l] => Change the language
-    if (e.key === 'l') {
-      setLanguage(inputField.value);
-    }
-
-    // [mod + m] => Change the typing mode
-    if (e.key === 'm') {
-      setTypingMode(inputField.value);
-    }
-
-    // [mod + p] => Change punctuation active
-    if (e.key === 'p') {
-      setPunctuation(inputField.value);
-    }
-  } else if (!document.querySelector('#theme-center').classList.contains('hidden')) {
+  if (!document.querySelector('#theme-center').classList.contains('hidden')) {
     if (e.key === 'Escape'){
       hideThemeCenter();
       inputField.focus();
     }
   } else if (e.key === 'Escape') {
-    setText(e);
+    setText();
   }
 });
 
@@ -289,9 +226,10 @@ function setTheme(_theme) {
     .catch(err => console.error(err));
 }
 
+// to be removed
 function setLanguage(_lang) {
   const lang = _lang.toLowerCase();
-  fetch('texts/random.json')
+  fetch('./texts/random.json')
     .then(response => response.json())
     .then(json => {
       if (typeof json[lang] !== 'undefined') {
@@ -308,52 +246,43 @@ function setLanguage(_lang) {
 
         setText();
       } else {
-        console.error(`language ${lang} is undefine`);
+        console.error(`language ${lang} is undefined`);
       }
     })
     .catch(err => console.error(err));
 }
 
-function setTypingMode(_mode) {
+function setClickingMode(_mode) {
   const mode = _mode.toLowerCase();
   switch (mode) {
-    case 'wordcount':
-      typingMode = mode;
-      setCookie('typingMode', mode, 90);
-      document.querySelector('#word-count').style.display = 'inline';
+    case 'clickcount':
+      clickingMode = mode;
+      setCookie('clickingMode', mode, 90);
+      document.querySelector('#click-count').style.display = 'inline';
       document.querySelector('#time-count').style.display = 'none';
+      document.querySelectorAll('#clicking-mode > span').forEach(e => (e.style.borderBottom = ''));
+      document.querySelector(`#clickcount`).style.borderBottom = '2px solid';
       setText();
       break;
     case 'time':
-      typingMode = mode;
-      setCookie('typingMode', mode, 90);
-      document.querySelector('#word-count').style.display = 'none';
+      clickingMode = mode;
+      setCookie('clickingMode', mode, 90);
+      document.querySelector('#click-count').style.display = 'none';
       document.querySelector('#time-count').style.display = 'inline';
+      document.querySelectorAll('#clicking-mode > span').forEach(e => (e.style.borderBottom = ''));
+      document.querySelector(`#time`).style.borderBottom = '2px solid';
       setText();
       break;
     default:
-      console.error(`mode ${mode} is undefine`);
+      console.error(`mode ${mode} is undefined`);
   }
 }
 
-function setPunctuation(_punc) {
-  const punc = _punc.toLowerCase();
-  if (punc === 'true') {
-    punctuation = true;
-    setCookie('punctuation', true, 90);
-    setText();
-  } else if (punc === 'false') {
-    punctuation = false;
-    setCookie('punctuation', false, 90);
-    setText();
-  }
-}
-
-function setWordCount(wc) {
-  setCookie('wordCount', wc, 90);
-  wordCount = wc;
-  document.querySelectorAll('#word-count > span').forEach(e => (e.style.borderBottom = ''));
-  document.querySelector(`#wc-${wordCount}`).style.borderBottom = '2px solid';
+function setClickCount(wc) {
+  setCookie('clickCount', wc, 90);
+  clickCount = wc;
+  document.querySelectorAll('#click-count > span').forEach(e => (e.style.borderBottom = ''));
+  document.querySelector(`#cc-${clickCount}`).style.borderBottom = '2px solid';
   setText();
 }
 

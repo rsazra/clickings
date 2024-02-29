@@ -36,6 +36,13 @@ body {
   transform: translateY(-2vh);
 }
 
+.bottom-bar {
+  /* display: flex; */
+  /* justify-content: flex-end; */
+  /* margin-left: auto; */
+}
+
+
 #theme-area{
   margin-top: 1rem;
   padding: 1.4rem 1rem;
@@ -73,8 +80,10 @@ body {
 
 /* #right-wing {} */
 
-#typing-area {
+#play-area {
   margin-top: 1rem;
+  margin-bottom: 1rem;
+  /* consolidate the above two? */
   padding: 1.4rem 1rem;
   border-radius: 0.4rem;
   background: #eaeaea;
@@ -127,7 +136,7 @@ body {
   display: none !important;
 }
 
-body, #header, #left-wing, #right-wing, #typing-area, #theme-area, #theme-center,
+body, #header, #left-wing, #right-wing, #play-area, #theme-area, #theme-center,
 #text-display, #redo-button, #footer, #highlight {
   transition: all .4s ease-in-out 0s;
 
