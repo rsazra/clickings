@@ -34,6 +34,29 @@ function setText() {
   textDisplay.style.display = 'block';
   inputField.className = '';
 
+  let c = document.getElementById("canvas");
+  let ctx = c.getContext("2d");
+
+  const rect = c.getBoundingClientRect();
+  c.width = rect.width * devicePixelRatio;
+  c.height = rect.height * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  c.style.width = rect.width + "px";
+  c.style.height = rect.height + "px";
+
+  const vw = rect.width;
+  const vh = rect.height;
+  const len = 44;
+  const br = len * 0.04;
+  ctx.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '30px Roboto Mono'
+  ctx.textAlign = 'center'
+  ctx.fillText("click to start", vw / 2, vh / 2 - len * 2);
+
+
   switch (clickingMode) {
     case 'clickcount':
       textDisplay.style.height = 'auto';
