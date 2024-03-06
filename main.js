@@ -4,13 +4,15 @@ const canvas = document.getElementById("canvas");
 
 // Initialize variables
 let clickingMode = 'clickcount';
-let clickCount;
+let clickTarget;
 let timeCount;
 let hits = 0;
 let misses = 0;
 let startDate = 0;
 let timer;
 let timerActive = false;
+let starting = true;
+let finished = false;
 
 // Set up canvas
 const rect = playArea.getBoundingClientRect();
@@ -22,54 +24,99 @@ const vw = rect.width;
 const vh = rect.height;
 let ctx = canvas.getContext("2d");
 ctx.scale(devicePixelRatio, devicePixelRatio);
-// Define target stuff (probably tmp)
-const target = new Path2D();
+let currentTarget, previousTarget;
 const len = 44;
 const br = len * 0.04;
 
 // Get cookies
 getCookie('theme') === '' ? setTheme('light') : setTheme(getCookie('theme'));
-getCookie('clickCount') === '' ? setClickCount(50) : setClickCount(getCookie('clickCount'));
+getCookie('clickTarget') === '' ? setClickTarget(50) : setClickTarget(getCookie('clickTarget'));
 getCookie('timeCount') === '' ? setTimeCount(60) : setTimeCount(getCookie('timeCount'));
 getCookie('clickingMode') === '' ? setClickingMode('clickcount') : setClickingMode(getCookie('clickingMode'));
 
-// Game initiation
-canvas.addEventListener('mousedown', function (event) {
-  if (ctx.isPointInPath(target, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
-    ctx.fillStyle = 'green';
-    startGame();
+// Hit detection
+canvas.addEventListener('click', function (event) {
+  if (ctx.isPointInPath(currentTarget, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
+    if (starting) { startGame(); }
+    else if (finished) { setStart(); return; }
+    registerHit();
+  }
+  else if (!(starting || finished)) {
+    registerMiss();
+  }
+});
+
+canvas.addEventListener('mousemove', function (event) {
+  if (ctx.isPointInPath(currentTarget, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
+    canvas.style.cursor = 'pointer';
   }
   else {
-    ctx.fillStyle = 'red';
+    canvas.style.cursor = '';
   }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fill(target);
 });
 
 function setStart() {
-  hits = 0;
-  misses = 0;
   timerActive = false;
   clearTimeout(timer);
+  startDate = Date.now();
+  starting = true;
+  finished = false;
 
-  target.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  currentTarget = new Path2D();
+  currentTarget.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
   ctx.fillStyle = 'black';
-  ctx.fill(target);
+  ctx.fill(currentTarget);
   ctx.font = '30px Roboto Mono';
   ctx.textAlign = 'center';
   ctx.fillText("click to start", vw / 2, vh / 2 - len * 2);
 }
 
 function startGame() {
-  console.log(clickingMode);
   switch (clickingMode) {
     case 'clickcount':
-      console.log('clicking');
       startDate = Date.now();
       break;
     case 'time':
       console.log('timing');
   }
+  starting = false;
+  hits = 0;
+  misses = 0;
+}
+
+function endGame() {
+  finished = true;
+  showResult();
+}
+
+function registerHit() {
+  hits += 1;
+  if (hits == clickTarget) {
+    endGame();
+    return;
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawTarget();
+}
+
+function registerMiss() {
+  misses += 1;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'red';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fill(currentTarget);
+  ctx.fillStyle = 'black';
+}
+
+function drawTarget() {
+  const x = Math.random() * (vw - (2 * len)) + len;
+  const y = Math.random() * (vh - (2 * len)) + len;
+
+  currentTarget = new Path2D();
+  currentTarget.roundRect(x, y, len, len, br);
+  ctx.fill(currentTarget);
 }
 
 function showResult() {
@@ -77,12 +124,12 @@ function showResult() {
   switch (clickingMode) {
     case 'clickcount':
       minute = (Date.now() - startDate) / 1000 / 60;
-
+      break;
     case 'time':
       minute = timeCount / 60;
   }
-  const cpm = Math.floor(clicks / minute);
-  const acc = Math.floor(hits / (hits + misses));
+  const cpm = Math.floor(hits / minute);
+  const acc = Math.floor((hits / (hits + misses)) * 100);
   document.querySelector('#right-wing').innerHTML = `CPM: ${cpm} / ACC: ${acc}`;
 }
 
@@ -112,7 +159,7 @@ function setTheme(_theme) {
           })
           .catch(err => console.error(err));
       } else {
-        console.log(`theme ${theme} is undefine`);
+        console.log(`theme ${theme} is undefined`);
       }
     })
     .catch(err => console.error(err));
@@ -144,11 +191,11 @@ function setClickingMode(_mode) {
   }
 }
 
-function setClickCount(wc) {
-  setCookie('clickCount', wc, 90);
-  clickCount = wc;
+function setClickTarget(wc) {
+  setCookie('clickTarget', wc, 90);
+  clickTarget = wc;
   document.querySelectorAll('#click-count > span').forEach(e => (e.style.borderBottom = ''));
-  document.querySelector(`#cc-${clickCount}`).style.borderBottom = '2px solid';
+  document.querySelector(`#cc-${clickTarget}`).style.borderBottom = '2px solid';
   setStart();
 }
 
