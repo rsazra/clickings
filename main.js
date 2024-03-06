@@ -10,7 +10,6 @@ let hits = 0;
 let misses = 0;
 let startDate = 0;
 let timer;
-let timerActive = false;
 let starting = true;
 let finished = false;
 let missed = false;
@@ -37,14 +36,14 @@ const br = len * 0.04;
 // Get cookies
 getCookie('theme') === '' ? setTheme('light') : setTheme(getCookie('theme'));
 getCookie('clickTarget') === '' ? setClickTarget(15) : setClickTarget(getCookie('clickTarget'));
-getCookie('timeCount') === '' ? setTimeCount(60) : setTimeCount(getCookie('timeCount'));
+getCookie('timeCount') === '' ? setTimeCount(30) : setTimeCount(getCookie('timeCount'));
 getCookie('clickingMode') === '' ? setClickingMode('clickcount') : setClickingMode(getCookie('clickingMode'));
 
 // Hit detection
 canvas.addEventListener('click', function (event) {
   if (ctx.isPointInPath(currentTarget, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
     if (starting) { startGame(); }
-    else if (finished) { setStart(); return; }
+    else if (finished) { return; }
     registerHit();
   }
   else if (!(starting || finished)) {
@@ -66,12 +65,14 @@ canvas.addEventListener('mousemove', function (event) {
 window.requestAnimationFrame(drawScreen);
 
 function setStart() {
-  timerActive = false;
-  clearTimeout(timer);
   startDate = Date.now();
   starting = true;
   finished = false;
   targets = [];
+  if (timeCount) {
+    clearInterval(timer);
+    document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
+  }
 
   currentTarget = new Path2D();
   const x = (vw - len) / 2;
@@ -86,7 +87,7 @@ function startGame() {
       startDate = Date.now();
       break;
     case 'time':
-      console.log('timing');
+      startTimer(timeCount);
   }
   starting = false;
   hits = 0;
@@ -96,13 +97,30 @@ function startGame() {
 function endGame() {
   finished = true;
   showResult();
+
+  if (clickingMode == 'time') {
+    document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
+  }
+}
+
+function startTimer(timeCount) {
+  let time = timeCount;
+  timer = setInterval(() => {
+    time--;
+    document.querySelector(`#tc-${timeCount}`).innerHTML = time;
+
+    if (time <= 0) {
+      clearInterval(timer);
+      endGame();
+    }
+  }, 1000);
 }
 
 function registerHit() {
   missed = false;
   hovered = false;
   hits += 1;
-  if (hits == clickTarget) {
+  if (clickingMode == 'clickcount' && hits >= clickTarget) {
     endGame();
     return;
   }
