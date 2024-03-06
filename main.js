@@ -13,6 +13,8 @@ let timer;
 let timerActive = false;
 let starting = true;
 let finished = false;
+let missed = false;
+let hovered = false;
 
 // Set up canvas
 const rect = playArea.getBoundingClientRect();
@@ -24,13 +26,17 @@ const vw = rect.width;
 const vh = rect.height;
 let ctx = canvas.getContext("2d");
 ctx.scale(devicePixelRatio, devicePixelRatio);
-let currentTarget, previousTarget;
+ctx.font = '30px Roboto Mono';
+ctx.textAlign = 'center';
+let currentTarget;
+let currentCoords;
+let targets = [];
 const len = 44;
 const br = len * 0.04;
 
 // Get cookies
 getCookie('theme') === '' ? setTheme('light') : setTheme(getCookie('theme'));
-getCookie('clickTarget') === '' ? setClickTarget(50) : setClickTarget(getCookie('clickTarget'));
+getCookie('clickTarget') === '' ? setClickTarget(15) : setClickTarget(getCookie('clickTarget'));
 getCookie('timeCount') === '' ? setTimeCount(60) : setTimeCount(getCookie('timeCount'));
 getCookie('clickingMode') === '' ? setClickingMode('clickcount') : setClickingMode(getCookie('clickingMode'));
 
@@ -49,11 +55,15 @@ canvas.addEventListener('click', function (event) {
 canvas.addEventListener('mousemove', function (event) {
   if (ctx.isPointInPath(currentTarget, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
     canvas.style.cursor = 'pointer';
+    hovered = true;
   }
   else {
     canvas.style.cursor = '';
+    hovered = false;
   }
 });
+
+window.requestAnimationFrame(drawScreen);
 
 function setStart() {
   timerActive = false;
@@ -61,15 +71,13 @@ function setStart() {
   startDate = Date.now();
   starting = true;
   finished = false;
+  targets = [];
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   currentTarget = new Path2D();
-  currentTarget.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
-  ctx.fillStyle = 'black';
-  ctx.fill(currentTarget);
-  ctx.font = '30px Roboto Mono';
-  ctx.textAlign = 'center';
-  ctx.fillText("click to start", vw / 2, vh / 2 - len * 2);
+  const x = (vw - len) / 2;
+  const y = (vh - len) / 2
+  currentTarget.roundRect(x, y, len, len, br);
+  currentCoords = { x: x, y: y };
 }
 
 function startGame() {
@@ -91,32 +99,57 @@ function endGame() {
 }
 
 function registerHit() {
+  missed = false;
+  hovered = false;
   hits += 1;
   if (hits == clickTarget) {
     endGame();
     return;
   }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawTarget();
+
+  targets.push({ x: currentCoords.x, y: currentCoords.y, opacity: 1 });
+  currentTarget = new Path2D();
+  const x = Math.random() * (vw - (2 * len)) + len;
+  const y = Math.random() * (vh - (2 * len)) + len;
+  currentTarget.roundRect(x, y, len, len, br);
+  currentCoords = { x: x, y: y };
 }
 
 function registerMiss() {
   misses += 1;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'red';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fill(currentTarget);
-  ctx.fillStyle = 'black';
+  missed = true;
+  setTimeout(() => missed = false, 100);
 }
 
-function drawTarget() {
-  const x = Math.random() * (vw - (2 * len)) + len;
-  const y = Math.random() * (vh - (2 * len)) + len;
+function drawTarget(target) {
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(0,200,0,${target.opacity})`;
+  ctx.roundRect(target.x, target.y, len, len, br);
+  ctx.fill();
+}
 
-  currentTarget = new Path2D();
-  currentTarget.roundRect(x, y, len, len, br);
+function drawScreen() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // draw past targets
+  targets.forEach((target) => {
+    drawTarget(target);
+  });
+  let newTargets = targets.filter((target) => target.opacity > 0).map((target) => {
+    return { x: target.x, y: target.y, opacity: target.opacity - 0.01 }
+  })
+  targets = newTargets;
+
+  // draw current target
+  ctx.fillStyle = 'black';
+  if (hovered && !starting) { ctx.fillStyle = 'purple' }
+  if (missed) { ctx.fillStyle = 'red' }
+  if (finished) { ctx.fillStyle = 'blue' }
   ctx.fill(currentTarget);
+
+  if (starting) { ctx.fillText("click to start", vw / 2, vh / 2 - len * 2); }
+
+  window.requestAnimationFrame(drawScreen);
 }
 
 function showResult() {
@@ -191,9 +224,9 @@ function setClickingMode(_mode) {
   }
 }
 
-function setClickTarget(wc) {
-  setCookie('clickTarget', wc, 90);
-  clickTarget = wc;
+function setClickTarget(cc) {
+  setCookie('clickTarget', cc, 90);
+  clickTarget = cc;
   document.querySelectorAll('#click-count > span').forEach(e => (e.style.borderBottom = ''));
   document.querySelector(`#cc-${clickTarget}`).style.borderBottom = '2px solid';
   setStart();
