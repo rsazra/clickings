@@ -1,20 +1,31 @@
-// Get document element
-const textDisplay = document.querySelector('#text-display');
-const inputField = document.querySelector('#input-field');
+// Get document elements
+const playArea = document.getElementById("play-area");
+const canvas = document.getElementById("canvas");
 
-// Initialize typing mode variables
+// Initialize variables
 let clickingMode = 'clickcount';
 let clickCount;
 let timeCount;
-
-// Initialize dynamic variables
-let randomWords = [];
-let wordList = [];
-let currentWord = 0;
-let correctKeys = 0;
+let hits = 0;
+let misses = 0;
 let startDate = 0;
 let timer;
 let timerActive = false;
+
+// Set up canvas
+const rect = playArea.getBoundingClientRect();
+canvas.width = rect.width * devicePixelRatio;
+canvas.height = rect.height * devicePixelRatio;
+canvas.style.width = rect.width + "px";
+canvas.style.height = rect.height + "px";
+const vw = rect.width;
+const vh = rect.height;
+let ctx = canvas.getContext("2d");
+ctx.scale(devicePixelRatio, devicePixelRatio);
+// Define target stuff (probably tmp)
+const target = new Path2D();
+const len = 44;
+const br = len * 0.04;
 
 // Get cookies
 getCookie('theme') === '' ? setTheme('light') : setTheme(getCookie('theme'));
@@ -22,202 +33,60 @@ getCookie('clickCount') === '' ? setClickCount(50) : setClickCount(getCookie('cl
 getCookie('timeCount') === '' ? setTimeCount(60) : setTimeCount(getCookie('timeCount'));
 getCookie('clickingMode') === '' ? setClickingMode('clickcount') : setClickingMode(getCookie('clickingMode'));
 
-setLanguage('english')
-
-// RESET
-function setText() {
-  currentWord = 0;
-  correctKeys = 0;
-  inputField.value = '';
-  timerActive = false;
-  clearTimeout(timer);
-  textDisplay.style.display = 'block';
-  inputField.className = '';
-
-  let c = document.getElementById("canvas");
-  let ctx = c.getContext("2d");
-
-  const rect = c.getBoundingClientRect();
-  c.width = rect.width * devicePixelRatio;
-  c.height = rect.height * devicePixelRatio;
-  ctx.scale(devicePixelRatio, devicePixelRatio);
-  c.style.width = rect.width + "px";
-  c.style.height = rect.height + "px";
-
-  const vw = rect.width;
-  const vh = rect.height;
-  const len = 44;
-  const br = len * 0.04;
-  ctx.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.font = '30px Roboto Mono'
-  ctx.textAlign = 'center'
-  ctx.fillText("click to start", vw / 2, vh / 2 - len * 2);
-
-
-  switch (clickingMode) {
-    case 'clickcount':
-      textDisplay.style.height = 'auto';
-      textDisplay.innerHTML = '';
-      wordList = [];
-      while (wordList.length < clickCount) {
-        const randomWord = randomWords[Math.floor(Math.random() * randomWords.length)];
-        if (wordList[wordList.length - 1] !== randomWord || wordList[wordList.length - 1] === undefined) {
-          wordList.push(randomWord);
-        }
-      }
-      break;
-
-    case 'time':
-      textDisplay.style.height = '3.2rem';
-      document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
-      textDisplay.innerHTML = '';
-      wordList = [];
-      for (i = 0; i < 500; i++) {
-        let n = Math.floor(Math.random() * randomWords.length);
-        wordList.push(randomWords[n]);
-      }
+// Game initiation
+canvas.addEventListener('mousedown', function (event) {
+  if (ctx.isPointInPath(target, event.offsetX * devicePixelRatio, event.offsetY * devicePixelRatio)) {
+    ctx.fillStyle = 'green';
+    startGame();
   }
-
-  showText();
-  inputField.focus();
-}
-
-// DISPLAY RESET
-function showText() {
-  wordList.forEach(word => {
-    let span = document.createElement('span');
-    span.innerHTML = word + ' ';
-    textDisplay.appendChild(span);
-  });
-  textDisplay.firstChild.classList.add('highlight');
-}
-
-// MAIN GAMEPLAY LOOP!
-// Key is pressed in input field
-inputField.addEventListener('keydown', e => {
-  // Add wrong class to input field
-  switch (clickingMode) {
-    case 'clickcount':
-      if (currentWord < wordList.length) inputFieldClass();
-    case 'time':
-      if (timerActive) inputFieldClass();
+  else {
+    ctx.fillStyle = 'red';
   }
-  function inputFieldClass() {
-    if (e.key >= 'a' && e.key <= 'z' || (e.key === `'` || e.key === ',' || e.key === '.' || e.key === ';')) {
-      let inputWordSlice = inputField.value + e.key;
-      let currentWordSlice = wordList[currentWord].slice(0, inputWordSlice.length);
-      inputField.className = inputWordSlice === currentWordSlice ? '' : 'wrong';
-    } else if (e.key === 'Backspace') {
-      let inputWordSlice = e.ctrlKey ? '' : inputField.value.slice(0, inputField.value.length - 1);
-      let currentWordSlice = wordList[currentWord].slice(0, inputWordSlice.length);
-      inputField.className = inputWordSlice === currentWordSlice ? '' : 'wrong';
-    } else if (e.key === ' ') {
-      inputField.className = '';
-    }
-  }
-
-  // If it is the first character entered
-  if (currentWord === 0 && inputField.value === '') {
-    switch (clickingMode) {
-      case 'clickcount':
-        startDate = Date.now();
-        break;
-
-      case 'time':
-        if (!timerActive) {
-          startTimer(timeCount);
-          timerActive = true;
-        }
-        function startTimer(time) {
-          if (time > 0) {
-            document.querySelector(`#tc-${timeCount}`).innerHTML = time;
-            timer = setTimeout(() => {
-              time--;
-              startTimer(time);
-            }, 1000);
-          } else {
-            timerActive = false;
-            textDisplay.style.display = 'none';
-            inputField.className = '';
-            document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
-            showResult();
-          }
-        }
-    }
-  }
-
-  // If it is the space key check the word and add correct/wrong class
-  if (e.key === ' ') {
-    e.preventDefault();
-
-    if (inputField.value !== '') {
-      // Scroll down text when reach new line
-      if (clickingMode === 'time') {
-        const currentWordPosition = textDisplay.childNodes[currentWord].getBoundingClientRect();
-        const nextWordPosition = textDisplay.childNodes[currentWord + 1].getBoundingClientRect();
-        if (currentWordPosition.top < nextWordPosition.top) {
-          for (i = 0; i < currentWord + 1; i++) textDisplay.childNodes[i].style.display = 'none';
-        }
-      }
-
-      // If it is not the last word increment currentWord,
-      if (currentWord < wordList.length - 1) {
-        if (inputField.value === wordList[currentWord]) {
-          textDisplay.childNodes[currentWord].classList.add('correct');
-          correctKeys += wordList[currentWord].length + 1;
-        } else {
-          textDisplay.childNodes[currentWord].classList.add('wrong');
-        }
-        textDisplay.childNodes[currentWord + 1].classList.add('highlight');
-      } else if (currentWord === wordList.length - 1) {
-        textDisplay.childNodes[currentWord].classList.add('wrong');
-        showResult();
-      }
-
-      inputField.value = '';
-      currentWord++;
-    }
-
-    // Else if it is the last word and input word is correct show the result
-  } else if (currentWord === wordList.length - 1) {
-    if (inputField.value + e.key === wordList[currentWord]) {
-      textDisplay.childNodes[currentWord].classList.add('correct');
-      correctKeys += wordList[currentWord].length;
-      currentWord++;
-      showResult();
-    }
-  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fill(target);
 });
 
-// Calculate and display result -- will need to be heavily edited
-function showResult() {
-  let clicks, minute, acc;
-  switch (clickingMode) {
-    case 'clickcount':
-      clicks = correctKeys / 5;
-      minute = (Date.now() - startDate) / 1000 / 60;
-      let totalKeys = -1;
-      wordList.forEach(e => (totalKeys += e.length + 1));
-      acc = Math.floor((correctKeys / totalKeys) * 100);
-      break;
+function setStart() {
+  hits = 0;
+  misses = 0;
+  timerActive = false;
+  clearTimeout(timer);
 
-    case 'time':
-      clicks = correctKeys / 5;
-      minute = timeCount / 60;
-      let sumKeys = -1;
-      for (i = 0; i < currentWord; i++) {
-        sumKeys += wordList[i].length + 1;
-      }
-      acc = acc = Math.min(Math.floor((correctKeys / sumKeys) * 100), 100);
-  }
-  let wpm = Math.floor(clicks / minute);
-  document.querySelector('#right-wing').innerHTML = `WPM: ${wpm} / ACC: ${acc}`;
+  target.roundRect((vw - len) / 2, (vh - len) / 2, len, len, br);
+  ctx.fillStyle = 'black';
+  ctx.fill(target);
+  ctx.font = '30px Roboto Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText("click to start", vw / 2, vh / 2 - len * 2);
 }
 
-// Command actions
+function startGame() {
+  console.log(clickingMode);
+  switch (clickingMode) {
+    case 'clickcount':
+      console.log('clicking');
+      startDate = Date.now();
+      break;
+    case 'time':
+      console.log('timing');
+  }
+}
+
+function showResult() {
+  let minute;
+  switch (clickingMode) {
+    case 'clickcount':
+      minute = (Date.now() - startDate) / 1000 / 60;
+
+    case 'time':
+      minute = timeCount / 60;
+  }
+  const cpm = Math.floor(clicks / minute);
+  const acc = Math.floor(hits / (hits + misses));
+  document.querySelector('#right-wing').innerHTML = `CPM: ${cpm} / ACC: ${acc}`;
+}
+
+// Actions
 document.addEventListener('keydown', e => {
   if (!document.querySelector('#theme-center').classList.contains('hidden')) {
     if (e.key === 'Escape') {
@@ -225,7 +94,7 @@ document.addEventListener('keydown', e => {
       inputField.focus();
     }
   } else if (e.key === 'Escape') {
-    setText();
+    setStart();
   }
 });
 
@@ -239,37 +108,11 @@ function setTheme(_theme) {
           .then(css => {
             setCookie('theme', theme, 90);
             document.querySelector('#theme').setAttribute('href', `themes/${theme}.css`);
-            setText();
+            setStart();
           })
           .catch(err => console.error(err));
       } else {
         console.log(`theme ${theme} is undefine`);
-      }
-    })
-    .catch(err => console.error(err));
-}
-
-// to be removed
-function setLanguage(_lang) {
-  const lang = _lang.toLowerCase();
-  fetch('./texts/random.json')
-    .then(response => response.json())
-    .then(json => {
-      if (typeof json[lang] !== 'undefined') {
-        randomWords = json[lang];
-        setCookie('language', lang, 90);
-
-        if (lang === "arabic") {
-          textDisplay.style.direction = "rtl"
-          inputField.style.direction = "rtl"
-        } else {
-          textDisplay.style.direction = "ltr"
-          inputField.style.direction = "ltr"
-        }
-
-        setText();
-      } else {
-        console.error(`language ${lang} is undefined`);
       }
     })
     .catch(err => console.error(err));
@@ -285,7 +128,7 @@ function setClickingMode(_mode) {
       document.querySelector('#time-count').style.display = 'none';
       document.querySelectorAll('#clicking-mode > span').forEach(e => (e.style.borderBottom = ''));
       document.querySelector(`#clickcount`).style.borderBottom = '2px solid';
-      setText();
+      setStart();
       break;
     case 'time':
       clickingMode = mode;
@@ -294,7 +137,7 @@ function setClickingMode(_mode) {
       document.querySelector('#time-count').style.display = 'inline';
       document.querySelectorAll('#clicking-mode > span').forEach(e => (e.style.borderBottom = ''));
       document.querySelector(`#time`).style.borderBottom = '2px solid';
-      setText();
+      setStart();
       break;
     default:
       console.error(`mode ${mode} is undefined`);
@@ -306,7 +149,7 @@ function setClickCount(wc) {
   clickCount = wc;
   document.querySelectorAll('#click-count > span').forEach(e => (e.style.borderBottom = ''));
   document.querySelector(`#cc-${clickCount}`).style.borderBottom = '2px solid';
-  setText();
+  setStart();
 }
 
 function setTimeCount(tc) {
@@ -317,7 +160,7 @@ function setTimeCount(tc) {
     e.innerHTML = e.id.substring(3, 6);
   });
   document.querySelector(`#tc-${timeCount}`).style.borderBottom = '2px solid';
-  setText();
+  setStart();
 }
 
 function setCookie(cname, cvalue, exdays) {
@@ -389,14 +232,6 @@ function showAllThemes() {
     })
     .catch(err => console.error(err));
 }
-
-// enter to open theme area
-document.getElementById('show-themes').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    showThemeCenter();
-    inputField.focus();
-  }
-});
 
 function showThemeCenter() {
   document.getElementById('theme-center').classList.remove('hidden');

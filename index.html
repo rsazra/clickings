@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>clickings</title>
   <meta name="description"
-    content="clickings.gg is a sleek and modern typing test website. it supports many custom themes." />
+    content="clickings.gg is a sleek and modern clicking test website. it supports many custom themes." />
   <link rel="stylesheet" href="style.css" />
   <link id="theme" rel="stylesheet" href="themes/light.css" />
 </head>
@@ -43,18 +43,6 @@
       <div id="right-wing">CPM: XX / ACC: XX</div>
     </div>
     <div id="play-area">
-      <!-- <div class="bar">
-        <input id="input-field" type="text" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
-          tabindex="1" />
-        <button id="redo-button" onclick="setText()" tabindex="2">redo</button>
-      </div>
-      <div id="text-display"></div> -->
-      <div class="bar hidden">
-        <input id="input-field" type="text" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
-          tabindex="1" />
-        <button id="redo-button" onclick="setText()" tabindex="2">redo</button>
-      </div>
-      <div id="text-display" class="hidden"></div>
       <canvas id="canvas"></canvas>
     </div>
     <div class="bottom-bar">
@@ -63,7 +51,7 @@
         <text> / </text>
         <span id="time" onclick="setClickingMode('time')">time</span>
       </span>
-      <span id="reset-button" onclick="setText()">reset</span>
+      <span id="reset-button" onclick="setStart()">reset</span>
     </div>
   </div>
   <div id="theme-center" class="hidden">
