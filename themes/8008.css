@@ -10,19 +10,17 @@ body {
   background: #3c4756;
 }
 
-#header {
+#header,
+#left-wing,
+#right-wing,
+#clicking-mode,
+#reset-button,
+#footer {
   color: #f44c7f;
 }
 
-#left-wing {
-  color: #f44c7f;
-}
-
-#right-wing {
-  color: #f44c7f;
-}
-
-#typing-area, #theme-area{
+#play-area,
+#theme-area {
   background: #a2aebd;
 }
 
@@ -30,32 +28,11 @@ body {
   color: #3c4756;
 }
 
-#input-field {
-  background: #adbac9;
-  color: #3c4756;
-}
-
-#input-field.wrong {
-  background: rgba(198, 38, 46, 0.3);
-}
-
-#redo-button {
-  background: #f44c7f;
-  color: #3c4756;
-}
-
-#footer {
-  color: #f44c7f;
-}
-
-.highlight {
-  color: #f44c7f;
-}
-
-.correct {
-  color: #6f7b8a;
-}
-
-.wrong {
-  color: #c6262e;
+#play-area {
+  --target: #3c4756;
+  --hit: #6f7b8a;
+  --miss: #c6262e;
+  --hover: #f44c7f;
+  --end: #6f7b8a;
+  /* different color here would be good */
 }

@@ -2,12 +2,6 @@
 const playArea = document.getElementById("play-area");
 const canvas = document.getElementById("canvas");
 
-const style = getComputedStyle(playArea);
-let targetColor = hexToRGB(style.getPropertyValue('--target'));
-let hitColor = hexToRGB(style.getPropertyValue('--hit'));
-let missColor = hexToRGB(style.getPropertyValue('--miss'));
-let hoverColor = hexToRGB(style.getPropertyValue('--hover'));
-let endColor = hexToRGB(style.getPropertyValue('--end'));
 // Initialize variables
 let clickingMode = 'clickcount';
 let clickTarget;
@@ -20,6 +14,14 @@ let starting = true;
 let finished = false;
 let missed = false;
 let hovered = false;
+
+let style;
+let targetColor;
+let hitColor;
+let missColor;
+let hoverColor;
+let endColor;
+// let targetColor, hitColor, missColor, hoverColor, endColor = { r: 0, g: 0, b: 0 };
 
 // Set up canvas
 const rect = playArea.getBoundingClientRect();
@@ -71,6 +73,7 @@ canvas.addEventListener('mousemove', function (event) {
 window.requestAnimationFrame(drawScreen);
 
 function setStart() {
+  updateColors();
   startDate = Date.now();
   starting = true;
   finished = false;
@@ -79,6 +82,7 @@ function setStart() {
     clearInterval(timer);
     document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
   }
+  console.log(targetColor);
 
   currentTarget = new Path2D();
   const x = (vw - len) / 2;
@@ -155,6 +159,8 @@ function drawFadingTarget(target) {
 function drawScreen() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  if (!targetColor) { updateColors(); };
+
   // draw past targets
   targets.forEach((target) => {
     drawFadingTarget(target);
@@ -201,6 +207,15 @@ document.addEventListener('keydown', e => {
     setStart();
   }
 });
+
+function updateColors() {
+  style = getComputedStyle(playArea);
+  targetColor = hexToRGB(style.getPropertyValue('--target'));
+  hitColor = hexToRGB(style.getPropertyValue('--hit'));
+  missColor = hexToRGB(style.getPropertyValue('--miss'));
+  hoverColor = hexToRGB(style.getPropertyValue('--hover'));
+  endColor = hexToRGB(style.getPropertyValue('--end'));
+}
 
 function setTheme(_theme) {
   const theme = _theme.toLowerCase();
