@@ -1,6 +1,6 @@
 # clickings
 
-<a href="https://typings.gg" target="_blank">typings.gg</a> is a sleek and modern typing test website. it supports many custom themes.
+<a href="https://typings.gg" target="_blank">typings.gg</a> is a sleek and modern typing test website made by github user [briano1905](https://github.com/briano1905). it supports many custom themes.
 
 <a href="http://rsazra.com/clickings">clickings</a> is a fork of typings for a similarly styled clicking test. it retains all of the original themes. 
 
@@ -59,4 +59,4 @@ in the theme menu you can see all the available themes to choose from, along wit
 
 ---
 
-you can read more about clickings and its development at [rsazra.com/clickings](http://rsazra.com/clickings/)
+you can read more about clickings and its development at [rsazra.com/pages/clickings](http://rsazra.com/pages/clickings/)
