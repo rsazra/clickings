@@ -3,6 +3,7 @@
 <a href="https://typings.gg" target="_blank">typings.gg</a> is a sleek and modern typing test website. it supports many custom themes.
 
 <a href="http://rsazra.com/clickings">clickings</a> is a fork of typings for a similarly styled clicking test. it retains all of the original themes. 
+<img width="1500" alt="image" src="https://github.com/rsazra/clickings/assets/67849060/78ca4f8e-ed12-4ba1-84a9-25090dd1e4aa">
 
 ## controls
  the game mode is set with the options in the bottom left. <kbd>hits</kbd> is the default, in which the game length the selection is the number of accurate clicks the game will last for. <kbd>time</kbd> changes the game length options, and starts a countdown after the first click, tracked in the same place as the game length is set. 
