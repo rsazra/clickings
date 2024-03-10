@@ -21,7 +21,6 @@ let hitColor;
 let missColor;
 let hoverColor;
 let endColor;
-// let targetColor, hitColor, missColor, hoverColor, endColor = { r: 0, g: 0, b: 0 };
 
 // Set up canvas
 const rect = playArea.getBoundingClientRect();
@@ -82,7 +81,6 @@ function setStart() {
     clearInterval(timer);
     document.querySelector(`#tc-${timeCount}`).innerHTML = timeCount;
   }
-  console.log(targetColor);
 
   currentTarget = new Path2D();
   const x = (vw - len) / 2;
