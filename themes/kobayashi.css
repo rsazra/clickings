@@ -1,56 +1,29 @@
 body {
-    background: #9a876a;
+  background: #9a876a;
+}
+
+.display-text {
+  color: #e5e8e6;
 }
 
 #header {
-    color: #d79e27;
+  color: #d79e27;
 }
 
-#left-wing {
-    color: #d79e27;
-}
-
+#left-wing,
 #right-wing {
-    color: #e5e8e6;
+  color: #d79e27;
 }
 
-#typing-area,
+#play-area,
 #theme-area {
-    background: #fefef5;
+  background: #fefef5;
 }
 
-#text-display {
-    color: #f00d00;
-}
-
-#input-field {
-    background: #5a5e61;
-    color: #eae3d5;
-}
-
-#input-field.wrong {
-    background: #f02d22;
-    color: #fefef5;
-}
-
-#redo-button {
-    background: #ebcd01;
-    color: #f00d00;
-}
-
-#footer {
-    color: #e5e8e6;
-}
-
-.highlight {
-    color: #272526;
-}
-
-.correct {
-    color: #99a4a6;
-}
-
-.wrong {
-    color: #f00d00;
-    font-style: italic;
+#play-area {
+  --miss: #272526;
+  --hit: #99a4a6;
+  --hover: #f00d00;
+  --end: #e5e8e6;
+  --target: #f00d00;
 }

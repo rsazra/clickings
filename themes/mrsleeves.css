@@ -9,52 +9,19 @@ body {
   background: #d4d4d4;
 }
 
-#header {
+.display-text {
   color: #1a1a1a;
 }
 
-#left-wing {
-  color: #1a1a1a;
-}
-
-#right-wing {
-  color: #1a1a1a;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #eaeaea;
 }
 
-#text-display {
-  color: #1a1a1a;
-}
-
-#input-field {
-  background: #fafafa;
-  color: #1a1a1a;
-}
-
-#input-field.wrong {
-  background: #f5c7b8;
-}
-
-#redo-button {
-  background: #f5c7b8;
-  color: #1a1a1a;
-}
-
-#footer {
-  color: #1a1a1a;
-}
-
-.highlight {
-  color: #ceaef2;
-}
-
-.correct {
-  color: #adcff1;
-}
-
-.wrong {
-  color: #f5c7b8;
+#play-area {
+  --target: #ceaef2;
+  --hit: #adcff1;
+  --hover: #f5c7b8;
+  --miss: #1a1a1a;
+  --end: #1a1a1a;
 }

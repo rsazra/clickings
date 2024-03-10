@@ -2,52 +2,19 @@ body {
   background: #1a1a1a;
 }
 
-#header {
+.display-text {
   color: #fafafa;
 }
 
-#left-wing {
-  color: #fafafa;
-}
-
-#right-wing {
-  color: #fafafa;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #002b36;
 }
 
-#text-display {
-  color: #fafafa;
-}
-
-#input-field {
-  background: #18444f;
-  color: #fafafa;
-}
-
-#input-field.wrong {
-  background: rgba(198, 38, 46, 0.3);
-}
-
-#redo-button {
-  background: #18444f;
-  color: #fafafa;
-}
-
-#footer {
-  color: #fafafa;
-}
-
-.highlight {
-  color: #6c71c4;
-}
-
-.correct {
-  color: #859900;
-}
-
-.wrong {
-  color: #dc322f;
+#play-area {
+  --target: #6c71c4;
+  --hit: #859900;
+  --miss: #dc322f;
+  --hover: #fafafa;
+  --end: #1a1a1a;
 }

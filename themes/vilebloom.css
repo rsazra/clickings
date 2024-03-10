@@ -15,52 +15,19 @@ body {
   background-image: -ms-linear-gradient(135deg, #cd6c8f 50%, #34657f 50%);
 }
 
-#header {
+.display-text {
   color: #ffffff;
 }
 
-#left-wing {
-  color: #ffffff;
-}
-
-#right-wing {
-  color: #ffffff;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #f6bd9d;
 }
 
-#input-field {
-  background: #ffffff;
-  color: #34657f;
-}
-
-#input-field.wrong {
-  background: rgba(198, 38, 46, 0.3);
-}
-
-#redo-button {
-  background: #34657f;
-  color: #ffffff;
-}
-
-#text-display {
-  color: #cd6c8f;
-}
-
-#footer {
-  color: #ffffff;
-}
-
-.highlight {
-  color: #ffffff;
-}
-
-.correct {
-  color: #34657f;
-}
-
-.wrong {
-  color: #ff808b;
+#play-area {
+  --target: #ffffff;
+  --hit: #34657f;
+  --miss: #ff808b;
+  --hover: #ffffff;
+  --end: #cd6c8f;
 }

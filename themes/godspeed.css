@@ -2,54 +2,20 @@ body {
   background: #6A97B5;
 }
 
-#header {
+.display-text {
   color: #e5e8e6;
 }
 
-#left-wing {
-  color: #e5e8e6;
-}
-
-#right-wing {
-  color: #e5e8e6;
-}
-
-#typing-area,
+#play-area,
 #theme-area {
   background: #eae3d5;
 }
 
-#text-display {
-  color: #575d5e;
-}
-
-#input-field {
-  background: #5A5E61;
-  color: #eae3d5;
-}
-
-#input-field.wrong {
-  background: #A90C1F;
-  color: #e5e8e6;
-}
-
-#redo-button {
-  background: #faee69;
-  color: #32321d;
-}
-
-#footer {
-  color: #e5e8e6;
-}
-
-.highlight {
-  color: #6A97B5;
-}
-
-.correct {
-  color: #99a4a6;
-}
-
-.wrong {
-  color: #A90C1F;
+#play-area {
+  --target: #e5e8e6;
+  --hit: #99a4a6;
+  --miss: #A90C1F;
+  --hover: #6A97B5;
+  --end: #faee69;
+  /* or #32321d */
 }

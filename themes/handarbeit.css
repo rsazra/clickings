@@ -21,48 +21,29 @@ body {
   color: #e7bac4;
 }
 
-#left-wing {
+#left-wing,
+#clicking-mode {
   color: #214ab5;
 }
 
-#right-wing {
+#right-wing,
+#reset-button {
   color: #147d36;
-}
-
-#typing-area, #theme-area {
-  background: #bb2e17;
-}
-
-#text-display {
-  color: #fafafa;
-}
-
-#input-field {
-  background: #71399a;
-  color: #fafafa;
-}
-
-#input-field.wrong {
-  background: #f7782b;
-}
-
-#redo-button {
-  background: #fcca34;
-  color: #fafafa;
 }
 
 #footer {
   color: #f7782b;
 }
 
-.highlight {
-  color: #fcca34;
+#play-area,
+#theme-area {
+  background: #bb2e17;
 }
 
-.correct {
-  color: #75bb29;
-}
-
-.wrong {
-  color: #f7782b;
+#play-area {
+  --end: #71399a;
+  --hit: #75bb29;
+  --miss: #f7782b;
+  --target: #fcca34;
+  --hover: #fafafa;
 }

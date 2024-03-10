@@ -11,52 +11,19 @@ body {
   background: #ffcd00;
 }
 
-#header {
+.display-text {
   color: #302f2b;
 }
 
-#left-wing {
-  color: #302f2b;
-}
-
-#right-wing {
-  color: #302f2b;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #f0ebd7;
 }
 
-#text-display {
-  color: #302f2b;
-}
-
-#input-field {
-  background: #dad5c3;
-  color: #302f2b;
-}
-
-#input-field.wrong {
-  background: rgba(198, 38, 46, 0.3);
-}
-
-#redo-button {
-  background: #302f2b;
-  color: #f0ebd7;
-}
-
-#footer {
-  color: #302f2b;
-}
-
-.highlight {
-  color: #302f2b;
-}
-
-.correct {
-  color: #6a7e93;
-}
-
-.wrong {
-  color: #e2322e;
+#play-area {
+  --target: #302f2b;
+  --hit: #6a7e93;
+  --miss: #e2322e;
+  --hover: #302f2b;
+  --end: #ffcd00;
 }

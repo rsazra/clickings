@@ -9,56 +9,22 @@ brown: #917075;
 */
 
 body {
-  background: linear-gradient(-20deg, rgba(255,186,200,1) 0%, rgba(255,152,172,1) 100%);
+  background: linear-gradient(-20deg, rgba(255, 186, 200, 1) 0%, rgba(255, 152, 172, 1) 100%);
 }
 
-#header {
+.display-text {
   color: #fff;
 }
 
-#left-wing {
-  color: #fff;
-}
-
-#right-wing {
-  color: #fff;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #fff;
 }
 
-#text-display {
-  color: #ff98ac;
-}
-
-#input-field {
-  background: #efefef;
-  color: #917075;
-}
-
-#input-field.wrong {
-  background: rgba(214, 0, 43, 0.3);
-  color: #fff;
-}
-
-#redo-button {
-  background: #ff98ac;
-  color: #fff;
-}
-
-#footer {
-  color: #fff;
-}
-
-.highlight {
-  color: #917075;
-}
-
-.correct {
-  color: #db7998;
-}
-
-.wrong {
-  color: #de1d57;
+#play-area {
+  --target: #917075;
+  --hit: #db7998;
+  --miss: #de1d57;
+  --end: #ffffff;
+  --hover: #ff98ac;
 }
