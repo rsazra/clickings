@@ -2,6 +2,13 @@
 const playArea = document.getElementById("play-area");
 const canvas = document.getElementById("canvas");
 
+// Get sounds
+const a1 = new Audio('sounds/capture.mp3');
+const a2 = new Audio('sounds/check.mp3');
+const a3 = new Audio('sounds/hit.mp3');
+const a4 = new Audio('sounds/miss.mp3');
+const a5 = new Audio('sounds/move.mp3');
+
 // Initialize variables
 let clickingMode = 'clickcount';
 let clickTarget;
@@ -87,6 +94,7 @@ function setStart() {
   const y = (vh - len) / 2
   currentTarget.roundRect(x, y, len, len, br);
   currentCoords = { x: x, y: y };
+  a1.play();
 }
 
 function startGame() {
@@ -103,6 +111,7 @@ function startGame() {
 }
 
 function endGame() {
+  a2.play();
   finished = true;
   showResult();
 
@@ -125,6 +134,7 @@ function startTimer(timeCount) {
 }
 
 function registerHit() {
+  a5.play();
   missed = false;
   hovered = false;
   hits += 1;
@@ -142,6 +152,7 @@ function registerHit() {
 }
 
 function registerMiss() {
+  a4.play();
   misses += 1;
   missed = true;
   setTimeout(() => missed = false, 100);
