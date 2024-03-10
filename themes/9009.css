@@ -12,52 +12,20 @@ body {
   background: #b6b09a;
 }
 
-#header {
+.display-text {
   color: #2e2f33;
 }
 
-#left-wing {
-  color: #2e2f33;
-}
-
-#right-wing {
-  color: #2e2f33;
-}
-
-#typing-area, #theme-area {
+#play-area,
+#theme-area {
   background: #d9d2c8;
 }
 
-#text-display {
-  color: #2e2f33;
-}
-
-#input-field {
-  background: #b6b09a;
-  color: #2e2f33;
-}
-
-#input-field.wrong {
-  background: rgba(210, 135, 130, 0.3);
-}
-
-#redo-button {
-  background: #6f8c70;
-  color: #d9d2c8;
-}
-
-#footer {
-  color: #2e2f33;
-}
-
-.highlight {
-  color: #96907a;
-}
-
-.correct {
-  color: #6f8c70;
-}
-
-.wrong {
-  color: #d28782;
+#play-area {
+  --target: #2e2f33;
+  --hit: #6f8c70;
+  --miss: #d28782;
+  --hover: #96907a;
+  --end: #d9d2c8;
+  /* different color here would be good */
 }

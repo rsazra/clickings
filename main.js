@@ -159,8 +159,6 @@ function drawFadingTarget(target) {
 function drawScreen() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (!targetColor) { updateColors(); };
-
   // draw past targets
   targets.forEach((target) => {
     drawFadingTarget(target);
@@ -170,14 +168,17 @@ function drawScreen() {
   })
   targets = newTargets;
 
-  // draw current target
-  ctx.fillStyle = `rgb(${targetColor.r},${targetColor.g},${targetColor.b})`;
-  if (hovered && !starting) { ctx.fillStyle = `rgb(${hoverColor.r},${hoverColor.g},${hoverColor.b})` }
-  if (missed) { ctx.fillStyle = `rgb(${missColor.r},${missColor.g},${missColor.b})` }
-  if (finished) { ctx.fillStyle = `rgb(${endColor.r},${endColor.g},${endColor.b})` }
-  ctx.fill(currentTarget);
+  if (!targetColor) { updateColors(); }
+  else {
+    // draw current target
+    ctx.fillStyle = `rgb(${targetColor.r},${targetColor.g},${targetColor.b})`;
+    if (hovered && !starting) { ctx.fillStyle = `rgb(${hoverColor.r},${hoverColor.g},${hoverColor.b})` }
+    if (missed) { ctx.fillStyle = `rgb(${missColor.r},${missColor.g},${missColor.b})` }
+    if (finished) { ctx.fillStyle = `rgb(${endColor.r},${endColor.g},${endColor.b})` }
+    ctx.fill(currentTarget);
 
-  if (starting) { ctx.fillText("click to start", vw / 2, vh / 2 - len * 2); }
+    if (starting) { ctx.fillText("click to start", vw / 2, vh / 2 - len * 2); }
+  }
 
   window.requestAnimationFrame(drawScreen);
 }
@@ -201,7 +202,6 @@ document.addEventListener('keydown', e => {
   if (!document.querySelector('#theme-center').classList.contains('hidden')) {
     if (e.key === 'Escape') {
       hideThemeCenter();
-      inputField.focus();
     }
   } else if (e.key === 'Escape') {
     setStart();

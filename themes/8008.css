@@ -10,12 +10,7 @@ body {
   background: #3c4756;
 }
 
-#header,
-#left-wing,
-#right-wing,
-#clicking-mode,
-#reset-button,
-#footer {
+.display-text {
   color: #f44c7f;
 }
 

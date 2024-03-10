@@ -6,10 +6,7 @@ body {
   color: #1a1a1a;
 }
 
-#left-wing,
-#right-wing,
-#clicking-mode,
-#reset-button {
+.display-text {
   color: #1a1a1a;
 }
 
@@ -23,14 +20,8 @@ body {
 
 #play-area {
   --target: #1a1a1a;
-  /* from text-display */
   --hit: #68b723;
-  /* from correct */
   --miss: #c6262e;
-  /* from wrong */
   --hover: #a56de2;
-  /* from highlight */
   --end: #d4d4d4;
-  /* from redo-button background */
-  /* also need to change background on text-area to play-area */
 }

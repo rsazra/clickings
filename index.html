@@ -13,10 +13,10 @@
 </head>
 
 <body>
-  <h2 id="header">clickings</h2>
+  <h2 id="header" class="display-text">clickings</h2>
   <div id="command-center" class="">
     <div class="bar">
-      <div id="left-wing">
+      <div id="left-wing" class="display-text">
         <span id="click-count">
           <span id="cc-5" onclick="setClickTarget(5)">5</span>
           <text> / </text>
@@ -40,18 +40,18 @@
           <span id="tc-120" onclick="setTimeCount(120)">120</span>
         </span>
       </div>
-      <div id="right-wing">CPM: XX / ACC: XX</div>
+      <div id="right-wing" class="display-text">CPM: XX / ACC: XX</div>
     </div>
     <div id="play-area">
       <canvas id="canvas"></canvas>
     </div>
     <div class="bottom-bar">
-      <span id="clicking-mode">
+      <span id="clicking-mode" class="display-text">
         <span id="clickcount" onclick="setClickingMode('clickcount')">hits</span>
         <text> / </text>
         <span id="time" onclick="setClickingMode('time')">time</span>
       </span>
-      <span id="reset-button" onclick="setStart()">reset</span>
+      <span id="reset-button" class="display-text" onclick="setStart()">reset</span>
     </div>
   </div>
   <div id="theme-center" class="hidden">
@@ -59,7 +59,7 @@
       < back</div>
         <div id="theme-area"></div>
     </div>
-    <div id="footer">
+    <div id="footer" class="display-text">
       <a href="https://github.com/briano1905/typings#typings" target="_blank" tabindex="3">user guide</a>/
       <div id="show-themes" class="button" onClick="showThemeCenter();" tabindex="4">themes</div>
     </div>
