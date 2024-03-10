@@ -2,6 +2,12 @@
 const playArea = document.getElementById("play-area");
 const canvas = document.getElementById("canvas");
 
+const style = getComputedStyle(playArea);
+let targetColor = hexToRGB(style.getPropertyValue('--target'));
+let hitColor = hexToRGB(style.getPropertyValue('--hit'));
+let missColor = hexToRGB(style.getPropertyValue('--miss'));
+let hoverColor = hexToRGB(style.getPropertyValue('--hover'));
+let endColor = hexToRGB(style.getPropertyValue('--end'));
 // Initialize variables
 let clickingMode = 'clickcount';
 let clickTarget;
@@ -139,9 +145,9 @@ function registerMiss() {
   setTimeout(() => missed = false, 100);
 }
 
-function drawTarget(target) {
+function drawFadingTarget(target) {
   ctx.beginPath();
-  ctx.fillStyle = `rgba(0,200,0,${target.opacity})`;
+  ctx.fillStyle = `rgba(${hitColor.r},${hitColor.g},${hitColor.b},${target.opacity})`;
   ctx.roundRect(target.x, target.y, len, len, br);
   ctx.fill();
 }
@@ -151,7 +157,7 @@ function drawScreen() {
 
   // draw past targets
   targets.forEach((target) => {
-    drawTarget(target);
+    drawFadingTarget(target);
   });
   let newTargets = targets.filter((target) => target.opacity > 0).map((target) => {
     return { x: target.x, y: target.y, opacity: target.opacity - 0.01 }
@@ -159,10 +165,10 @@ function drawScreen() {
   targets = newTargets;
 
   // draw current target
-  ctx.fillStyle = 'black';
-  if (hovered && !starting) { ctx.fillStyle = 'purple' }
-  if (missed) { ctx.fillStyle = 'red' }
-  if (finished) { ctx.fillStyle = 'blue' }
+  ctx.fillStyle = `rgb(${targetColor.r},${targetColor.g},${targetColor.b})`;
+  if (hovered && !starting) { ctx.fillStyle = `rgb(${hoverColor.r},${hoverColor.g},${hoverColor.b})` }
+  if (missed) { ctx.fillStyle = `rgb(${missColor.r},${missColor.g},${missColor.b})` }
+  if (finished) { ctx.fillStyle = `rgb(${endColor.r},${endColor.g},${endColor.b})` }
   ctx.fill(currentTarget);
 
   if (starting) { ctx.fillText("click to start", vw / 2, vh / 2 - len * 2); }
@@ -341,4 +347,11 @@ function hideThemeCenter() {
   document.getElementById('command-center').classList.remove('hidden');
 }
 
-
+function hexToRGB(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
