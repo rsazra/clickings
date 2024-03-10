@@ -3,6 +3,7 @@
 <a href="https://typings.gg" target="_blank">typings.gg</a> is a sleek and modern typing test website made by github user [briano1905](https://github.com/briano1905). it supports many custom themes.
 
 <a href="http://rsazra.com/clickings">clickings</a> is a fork of typings for a similarly styled clicking test. it retains all of the original themes. 
+
 <img width="1500" alt="image" src="https://github.com/rsazra/clickings/assets/67849060/78ca4f8e-ed12-4ba1-84a9-25090dd1e4aa">
 
 ## controls
