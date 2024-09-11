@@ -61,4 +61,4 @@ in the theme menu you can see all the available themes to choose from, along wit
 
 ---
 
-you can read more about clickings and its development at [rsazra.com/pages/clickings](http://rsazra.com/pages/clickings/)
+you can read more about clickings and its development at [rsazra.com/pages/clickings](http://rsazra.com/pages/018.html/)
