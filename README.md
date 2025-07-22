@@ -57,8 +57,3 @@ in the theme menu you can see all the available themes to choose from, along wit
 - `godspeed` inspired by SA Godspeed by Mito
 - `leviathan` inspired by SA Leviathan by OneCreativeMind
 - `kobayashi` inspired by SA Kobayashi by Madēo
-
-
----
-
-you can read more about clickings and its development at [rsazra.com/pages/clickings](http://rsazra.com/pages/018.html/)
